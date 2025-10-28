@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Using the Mean Value Theorem</title>
+</head>
+
+<body>
+    <a href="../../index.html">HOME</a>
+    <ol>
+        <h3>Learning Objectives</h3>
+        <li>Justify conclusions about functions by applying the Extreme Value Theorem.<br/>
+            <ul>
+                <li>If a function f is continuous over the interval (a, b), then the Extreme Value Theorem guarantees that f has at least one minimum value and at least one maximum value on [a, b].</li>
+                <li>A	point	on	a	function	where	the	first	derivative	equals zero or fails to exist is a critical point of the function.</li>
+                <li>All local (relative) extrema occur at critical points of a function, though not all critical points are local extrema.</li>
+            </ul>
+        </li>
+    </ol>
+
+     <h3>Extreme Value Theorem</h3>
+    <ol>Conditions
+        <li>f(x) must be continuous on the closed and bounded interval [a, b]</li>
+    </ol>
+    <h4>If the conditions are met:</h4>
+    <p>The Extreme Value Theorem guarantees that there is at least one value c and one value d on the interval (a, b) such that: 
+        <ul>
+            <li>f(c) <= f(x) <= f(d) for all x in [a, b]</li>
+        </ul>
+    </p>
+    <h3>Example</h3>
+    <p>Find the extreme values in a function <img height="30px" src="../../images/unit_5/EVT_1.png"/></p>
+    <h4>Steps</h4>
+    <ol>
+        <li>Find the Domain of the function
+        <p>In this case, for f(x) to be defined, the expression under the sqare root must be positive.</p>
+        <img height="120px" src="../../images/unit_5/EVT_2.png"/>>
+        </li>
+        <li>FInd the first derivative: <br/>
+            <img height='30px' src="../../images/unit_5/EVT_3.png"/>
+        </li>
+        <li> Find critical points - where the derivative is equal to zero or undefined.
+            <p>The deriviative is defined for all values within the domain</p>
+            <p>y' = 0 when 60x = 0, or when x = 0</p>
+            <p>The only critical point is x=0</p>
+        </li>
+        <li> Determine the nature of the critical points
+            <p>You can verify whether x = 0 is a local max or min by looking at values slightly to either side.</p>
+            <p>You can also see that y' is negative (decreasing slope) to the left of x = 0 and positive (increasing slope) to the right of x = 0.</p>
+            <p>So, x = 0 is a local minimum</p>
+        </li>
+    </ol>
+
+    <p>Therefore, there is a local minimum value of 10 at x=0</p>
+    <br/>
+    <h3>Newton's Method for Finding Zeroes</h3>
+    <a target="_blank" href="https://andymath.com/newtons-method/">External Reference for Explanation</a><br/>
+    <a target="_blank" href="https://tutorial.math.lamar.edu/Problems/CalcI/NewtonsMethod.aspx">Practice Problems (external site)</a><br/>
+    <br/><br/>
+    <a href="./mean_value_theorem.html">Previous Topic - Using the Mean Value Theorem</a><a>Next Topic</a><br/>
+</body>
+
+</html>
