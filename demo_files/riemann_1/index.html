@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Riemann Sum Visualizer</title>
+  <script src="https://cdn.jsdelivr.net/npm/mathjs@11/lib/browser/math.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #f9f9f9; text-align: center; }
+    canvas { border: 1px solid #333; background: white; margin-top: 10px; }
+    .controls { 
+      margin: 10px auto; 
+      display: flex; 
+      justify-content: center; 
+      gap: 10px; 
+      flex-wrap: wrap; 
+    }
+    label { font-weight: bold; }
+    input, select, button { font-size: 1em; padding: 4px; }
+  </style>
+</head>
+<body>
+  <h2>Riemann Sum Demonstration (math.js version)</h2>
+
+  <div class="controls">
+    <label>f(x) = <input id="funcInput" value="sin(x)" size="20"></label>
+    <label>a = <input id="aInput" type="number" value="0"></label>
+    <label>b = <input id="bInput" type="number" value="6.283"></label>
+    <label>n = <input id="nInput" type="number" value="10" min="1"></label>
+    <label>Sum Type:
+      <select id="sumType">
+        <option value="left">Left</option>
+        <option value="right">Right</option>
+        <option value="midpoint" selected>Midpoint</option>
+      </select>
+    </label>
+    <button id="updateBtn">Update</button>
+  </div>
+
+  <canvas id="canvas" width="800" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const funcInput = document.getElementById("funcInput");
+    const aInput = document.getElementById("aInput");
+    const bInput = document.getElementById("bInput");
+    const nInput = document.getElementById("nInput");
+    const sumType = document.getElementById("sumType");
+    const updateBtn = document.getElementById("updateBtn");
+
+    // --- Parse math.js expressions safely ---
+    function parseFunction(expr) {
+      try {
+        const node = math.parse(expr);
+        const code = node.compile();
+return function(x) {
+  try {
+    const y = code.evaluate({ x: Number(x) }); // force numeric x
+    // Handle complex or non-finite values
+    if (typeof y === 'object' && y.im !== 0) return NaN;
+    return (Number.isFinite(y) ? y : NaN);
+  } catch {
+    return NaN;
+  }
+};
+      } catch {
+        return () => NaN;
+      }
+    }
+
+    function draw() {
+      const f = parseFunction(funcInput.value);
+      const a = parseFloat(aInput.value);
+      const b = parseFloat(bInput.value);
+      const n = parseInt(nInput.value);
+      const type = sumType.value;
+
+      // Compute min and max for y-scaling
+      const samples = 1000;
+      const xs = Array.from({ length: samples }, (_, i) => a + (b - a) * i / (samples - 1));
+      const ys = xs.map(x => f(x));
+      const finiteYs = ys.filter(y => isFinite(y));
+
+      let yMin = Math.min(...finiteYs);
+      let yMax = Math.max(...finiteYs);
+
+      if (!isFinite(yMin) || !isFinite(yMax)) {
+        yMin = -1; yMax = 1;
+      }
+
+      const xRange = b - a;
+      if (Math.abs(yMax - yMin) > 100 * xRange) {
+        yMin = -xRange / 2;
+        yMax = xRange / 2;
+      }
+
+      const width = canvas.width;
+      const height = canvas.height;
+      const xToPx = x => (x - a) / (b - a) * width;
+      const yToPx = y => height - ((y - yMin) / (yMax - yMin)) * height;
+
+      ctx.clearRect(0, 0, width, height);
+
+// --- Axes with tick marks and labels ---
+ctx.strokeStyle = "#000";
+ctx.lineWidth = 1;
+ctx.font = "12px sans-serif";
+ctx.fillStyle = "#000";
+
+const y0 = yToPx(0);
+const x0 = xToPx(0);
+
+// Draw main axes
+ctx.beginPath();
+if (y0 >= 0 && y0 <= height) {
+  ctx.moveTo(0, y0);
+  ctx.lineTo(width, y0);
+}
+if (x0 >= 0 && x0 <= width) {
+  ctx.moveTo(x0, 0);
+  ctx.lineTo(x0, height);
+}
+ctx.stroke();
+
+// Determine nice tick spacing for both axes
+function niceStep(range) {
+  const rough = range / 10; // aim for ~10 ticks
+  const exp = Math.floor(Math.log10(rough));
+  const base = Math.pow(10, exp);
+  const fraction = rough / base;
+  let niceFraction;
+  if (fraction <= 1) niceFraction = 1;
+  else if (fraction <= 2) niceFraction = 2;
+  else if (fraction <= 5) niceFraction = 5;
+  else niceFraction = 10;
+  return niceFraction * base;
+}
+
+const xStep = niceStep(b - a);
+const yStep = niceStep(yMax - yMin);
+
+// Draw x-axis ticks and labels
+if (y0 >= 0 && y0 <= height) {
+  ctx.beginPath();
+  for (let x = Math.ceil(a / xStep) * xStep; x <= b; x += xStep) {
+    const px = xToPx(x);
+    ctx.moveTo(px, y0 - 4);
+    ctx.lineTo(px, y0 + 4);
+    ctx.stroke();
+    ctx.fillText(x.toFixed(2), px - 10, y0 + 16);
+  }
+}
+
+// Draw y-axis ticks and labels
+if (x0 >= 0 && x0 <= width) {
+  ctx.beginPath();
+  for (let y = Math.ceil(yMin / yStep) * yStep; y <= yMax; y += yStep) {
+    const py = yToPx(y);
+    ctx.moveTo(x0 - 4, py);
+    ctx.lineTo(x0 + 4, py);
+    ctx.stroke();
+    ctx.fillText(y.toFixed(2), x0 + 6, py - 2);
+  }
+}
+
+
+      // --- Function curve ---
+      ctx.beginPath();
+      ctx.strokeStyle = "blue";
+      xs.forEach((x, i) => {
+        const y = f(x);
+        if (isFinite(y)) {
+          const px = xToPx(x);
+          const py = yToPx(y);
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+      });
+      ctx.stroke();
+
+      // --- Riemann rectangles ---
+      const dx = (b - a) / n;
+      let sum = 0;
+for (let i = 0; i < n; i++) {
+  let x;
+  if (type === "left") x = a + i * dx;
+  else if (type === "right") x = a + (i + 1) * dx;
+  else x = a + (i + 0.5) * dx;
+
+  const y = f(x);
+  if (!isFinite(y)) continue;
+
+  const rectX = xToPx(a + i * dx);
+  const rectW = xToPx(a + (i + 1) * dx) - rectX;
+  const rectY = yToPx(Math.max(y, 0));
+  const rectH = Math.abs(yToPx(0) - yToPx(y));
+
+  // --- Gradient color based on position ---
+  const t = (x - a) / (b - a); // 0 → 1 across interval
+  const r = Math.round(255 * (1 - t)); // red fades out
+  const g = Math.round(100 + 155 * t); // green increases
+  const bCol = Math.round(255 * t); // blue fades in
+  ctx.fillStyle = `rgba(${r},${g},${bCol},0.5)`;
+
+  ctx.fillRect(rectX, rectY, rectW, rectH);
+  sum += y * dx;
+}
+
+
+
+
+      // --- Display result ---
+      ctx.fillStyle = "black";
+      ctx.font = "16px sans-serif";
+      ctx.fillText(`Approx. Integral ≈ ${sum.toFixed(4)}`, 10, 20);
+    }
+
+    updateBtn.addEventListener("click", draw);
+    draw();
+  </script>
+</body>
+</html>

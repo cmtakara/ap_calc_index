@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riemann Sums</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; }
+        canvas { border: 1px solid #000; }
+        .controls { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .controls label { display: block; }
+    </style>
+</head>
+
+<body>
+    <a href="../../index.html">HOME</a>
+    <ol>
+        <h3>Learning Objectives</h3>
+        <li>Approximate	a	definite integral using geometric and numerical methods.<br/>
+            <ul>
+                <li>Definite	integrals	can	be	approximated	for	functions that are represented graphically, numerically, analytically, and verbally.</li>
+                <li>Definite	integrals	can	be	approximated	using	a left Riemann sum, a right Riemann sum, a midpoint Riemann sum, or a trapezoidal sum; approximations can be computed using either uniform or nonuniform partitions.</li>
+                <li>Definite	integrals	can	be	approximated	using	numerical methods, with or without technology.</li>
+                <li>Depending on the behavior of a function, it may be possible to determine whether an approximation	for	a	definite	integral	is	an	 underestimate or overestimate for the value of the	definite	integral.</li>
+            </ul>
+        </li>
+    </ol>
+    <h3>Riemann Sums</h3>
+    <img height="300px" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Riemann_sum_convergence.svg/500px-Riemann_sum_convergence.svg.png"/>
+    <figcaption>Reimann Sums <a target="_blank" href="https://en.wikipedia.org/wiki/Riemann_sum">see wikipedia article</a></figcaption>
+   <br />
+   <h1>Riemann Sum Demonstration</h1>
+
+    <canvas id="riemannCanvas" width="800" height="400"></canvas>
+
+    <div class="controls">
+        <div>
+            <label for="functionInput">Function: f(x) = </label>
+            <input type="text" id="functionInput" value="Math.sin(x) + 1">
+        </div>
+        <div>
+            <label for="intervalA">Start Interval (a):</label>
+            <input type="number" id="intervalA" value="0">
+        </div>
+        <div>
+            <label for="intervalB">End Interval (b):</label>
+            <input type="number" id="intervalB" value="6.28">
+        </div>
+        <div>
+            <label for="rectangles">Number of Rectangles (n):</label>
+            <input type="range" id="rectangles" min="1" max="100" value="20">
+            <span id="rectanglesValue">20</span>
+        </div>
+        <div>
+            <label for="sumType">Sum Type:</label>
+            <select id="sumType">
+                <option value="left">Left Riemann Sum</option>
+                <option value="right">Right Riemann Sum</option>
+                <option value="midpoint">Midpoint Riemann Sum</option>
+            </select>
+        </div>
+    </div>
+
+    <a href="https://cdn.kutasoftware.com/Worksheets/Calc/06%20-%20Riemann%20Sum%20Tables.pdf" target="_blank">Riemann Sum Practice Worksheet (external)</a>
+    &nbsp;
+    <a href="https://apps.asdk12.org/staff/neff_jennifer/HOMEWORK/258478_4.6a2.pdf">Practice with Riemann Sums (external)</a>
+    &nbsp;
+    <a href="https://sybilnelson.com/Summer/R2.pdf" target="_blank">Practice Problems (external)</a>
+    &nbsp;
+    <a href="https://calculus.flippedmath.com/uploads/1/1/3/0/11305589/calc_6.2_packet.pdf" target="_blank">Practice Packet (external)</a>
+    &nbsp;
+    <a href="https://mryangteacher.weebly.com/uploads/7/7/0/2/7702250/4.2_riemann_sums_bc_homework_ws_2016.pdf" target="_blank">practice worksheet (external)</a>
+
+
+    <a href="./summation_integral_notation.html">Previous Topic - Riemann Sums, Summation Notation, and Definite Integral Notation</a>
+    &nbsp;&nbsp;
+    <a>Next Topic - Interpreting the Behavior of Accumulation Functions Involving Area</a><br/>
+    <script src="../../scripts/unit_6/riemann_script.js"></script>
+</body>
+
+</html>
